@@ -1,8 +1,11 @@
-console.log('Starting app.');
+console.log('Starting app.js');
 
 const fs = require('fs');
 const os = require('os');
+const notes = require('./notes');
 
-let user = os.userInfo();
+let res = notes.AddNote();
+console.log(res);
+// let user = os.userInfo();
 
-fs.appendFileSync('greeting.txt', 'Hello '+user.username);
+// fs.appendFileSync('greeting.txt', `Hello ${user.username}! You are ${notes.age}`);
