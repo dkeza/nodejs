@@ -1,7 +1,24 @@
-console.log("Starting notes.js");
+const fileName = "notes-data.json";
+const fs = require('fs');
 
 let addNote = (title, body) => {
-    console.log('Adding note', title, body);
+    let note = {
+        title,
+        body
+    };
+    let notes = [];
+    if (fs.existsSync(fileName)) {
+        try {
+            notes = JSON.parse(fs.readFileSync(fileName));
+        } catch(e) {
+            console.log(e);
+        }
+    }
+    if (notes.length === 0 || (notes.length>0 && !(notes.filter(note => note.title === title).length>0))) {
+        notes.push(note);
+        fs.writeFileSync(fileName, JSON.stringify(notes));
+        console.log('Adding note', notes);
+    }
 }
 
 let getAll = (title, body) => {
