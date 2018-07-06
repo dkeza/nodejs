@@ -1,11 +1,7 @@
 const fileName = "notes-data.json";
 const fs = require('fs');
 
-let addNote = (title, body) => {
-    let note = {
-        title,
-        body
-    };
+let readNotes = () => {
     let notes = [];
     if (fs.existsSync(fileName)) {
         try {
@@ -14,11 +10,29 @@ let addNote = (title, body) => {
             console.log(e);
         }
     }
-    if (notes.length === 0 || (notes.length>0 && !(notes.filter(note => note.title === title).length>0))) {
-        notes.push(note);
-        fs.writeFileSync(fileName, JSON.stringify(notes));
-        console.log('Adding note', notes);
+    return notes;
+}
+
+let isNoteValid = (title, notes) => {
+    return (notes.length === 0 || (notes.length>0 && !(notes.filter(note => note.title === title).length>0)));
+}
+
+let saveNote = (title, body, notes) => {
+    notes.push({
+        title,
+        body
+    });
+    fs.writeFileSync(fileName, JSON.stringify(notes));
+}
+
+let addNote = (title, body) => {
+    let notes = [], success = false;
+    notes = readNotes();
+    if (isNoteValid(title, notes)) {
+        saveNote(title, body, notes);
+        success = true;
     }
+    return success;
 }
 
 let getAll = (title, body) => {

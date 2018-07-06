@@ -13,7 +13,13 @@ console.log("process.argv", process.argv);
 console.log("yargs.argv", argv);
 
 if (command === 'add') {
-    notes.addNote(argv.title, argv.body);
+    let success = false;
+    success = notes.addNote(argv.title, argv.body);
+    if (success) {
+        console.log("Note saved.")
+    } else {
+        console.log("Note not saved.")
+    }
 } else if (command === 'list') {
     notes.getAll();
 } else if (command === 'read') {
