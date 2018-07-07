@@ -7,13 +7,13 @@ const yargs = require('yargs');
 const notes = require('./notes');
 
 const argv = yargs.argv;
+let success = false;
 let command = argv._[0];
 console.log(command);
 console.log("process.argv", process.argv);
 console.log("yargs.argv", argv);
 
 if (command === 'add') {
-    let success = false;
     success = notes.addNote(argv.title, argv.body);
     if (success) {
         console.log("Note saved.")
@@ -21,11 +21,22 @@ if (command === 'add') {
         console.log("Note not saved.")
     }
 } else if (command === 'list') {
-    notes.getAll();
+    console.log(notes.getAll());
 } else if (command === 'read') {
-    notes.readNote(argv.title);
+    let note = {};
+    note = notes.readNote(argv.title);
+    if (note==undefined) {
+        console.log("Note not found");
+    } else {
+        console.log(note);
+    }
 } else if (command === 'remove') {
-    notes.removeNote(argv.title);
+    success = notes.removeNote(argv.title);
+    if (success) {
+        console.log("Note deleted.")
+    } else {
+        console.log("Note not deleted.")
+    }
 } else {
     console.log('Unknown');
 }

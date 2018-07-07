@@ -18,10 +18,12 @@ let isNoteValid = (title, notes) => {
 }
 
 let saveNote = (title, body, notes) => {
-    notes.push({
-        title,
-        body
-    });
+    if (title !== undefined && body !== undefined) {
+        notes.push({
+            title,
+            body
+        });
+    };
     fs.writeFileSync(fileName, JSON.stringify(notes));
 }
 
@@ -35,16 +37,31 @@ let addNote = (title, body) => {
     return success;
 }
 
-let getAll = (title, body) => {
-    console.log('Get all');
+let getAll = () => {
+    return readNotes();
 }
 
 let readNote = (title) => {
-    console.log('Read note', title);
+    let note = undefined, notes = readNotes();
+    if (notes.length>0) {
+        filteredNotes = notes.filter(note => note.title === title);
+        note = filteredNotes[0];
+    }
+    return note;
 }
 
 let removeNote = (title) => {
-    console.log('Remove note', title);
+    let success = false, notes = [], filteredNotes = [];
+    notes = readNotes();
+    if (notes.length>0) {
+        filteredNotes = notes.filter(note => note.title !== title);
+        if (notes.length !== filteredNotes.length) {
+            saveNote(undefined, undefined, filteredNotes);
+            success = true;
+        }
+        
+    }
+    return success;
 }
 
 module.exports = {
