@@ -21,6 +21,14 @@ geocode.geoAddress(argv.address, (errorMessage, results) => {
         console.log(errorMessage);
     } else {
         console.log(JSON.stringify(results, undefined, 2));
+        geocode.geoWeather(results, (errorMessage, results) => {
+            if (errorMessage) {
+                console.log(errorMessage);
+            } else {
+                console.log(JSON.stringify(results, undefined, 2));
+            }
+        });
     }
 });
+
 
