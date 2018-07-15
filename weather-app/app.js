@@ -1,5 +1,6 @@
 const yargs = require('yargs');
 const geocode = require('./geocode/geocode');
+const weather = require('./weather/weather');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -21,7 +22,7 @@ geocode.geoAddress(argv.address, (errorMessage, results) => {
         console.log(errorMessage);
     } else {
         console.log(JSON.stringify(results, undefined, 2));
-        geocode.geoWeather(results, (errorMessage, results) => {
+        weather.getWeather(results.latitude, results.longitude, (errorMessage, results) => {
             if (errorMessage) {
                 console.log(errorMessage);
             } else {
