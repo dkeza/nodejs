@@ -32,16 +32,11 @@ let geoWeather = (geo, callback) => {
         proxy:'http://127.0.0.1:8888'
     }, (error, response, body) => {
         //console.log(JSON.stringify(body, undefined, 2));
-        if (error) {
-            callback(`Cann't connect to server`);
-        } else if (body.status==="ZERO_RESULTS") {
-            callback(`No location found`);
-        } else if (body.status==="OK") {
-            callback(undefined,body)
-        }  else {
-            callback(body);
+        if (!error && response.statusCode == 200) {
+            callback(`Current temp. is ${body.currently.temperature}`);
+        } else {
+            callback(`Unable to fetch weather`);
         }
-        
     });
 }
 
