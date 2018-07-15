@@ -8,7 +8,10 @@ let getWeather = (latitude, longitude, callback) => {
     }, (error, response, body) => {
         //console.log(JSON.stringify(body, undefined, 2));
         if (!error && response.statusCode == 200) {
-            callback(`Current temp. is ${body.currently.temperature}`);
+            callback(undefined, {
+                temperature: body.currently.temperature,
+                apparentTemperature : body.currently.apparentTemperature
+            });
         } else {
             callback(`Unable to fetch weather`);
         }
