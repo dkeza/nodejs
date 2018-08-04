@@ -54,34 +54,29 @@ app.get('/todos/:id', (req, res) => {
     });
 })
 
+app.delete('/todos/:id', (req, res) => {
+    let id = req.params.id;
+    if (!ObjectID.isValid(id)) {
+        console.log('not valid id!');
+        res.status(404).send('');
+        return;
+    }
+    Todo.findByIdAndRemove(id).then((todo) => {
+        console.log('findById', todo);
+        if (todo) {
+            res.status(200).send(todo);
+        } else {
+            console.log('id not found!');
+            res.status(404).send('');
+        }
+    }, (e) => {
+        res.status(400).send('');
+    });
+});
+
+
 app.listen(port, () => {
     console.log(`Started on port ${port}`);
 })
 
 module.exports = {app};
- 
-// var newTodo = new Todo({
-//     text: 'Cook dinner'
-// });
-
-// var newTodo = new Todo({
-//     completed: false
-// });
-
-// newTodo.save().then( (doc) => {
-//     console.log('Saved todo', doc);
-// }, (e) => {
-//         console.log('UNable to save todo', e);
-// });
-
-
-
-// let newUser = new User({
-//     email: "geri@yahoo.com"
-// });
-
-// newUser.save().then( (doc) => {
-//     console.log("Saved user", doc);
-// }, (e) => {
-//     console.log("Unable to save User", e);
-// });
