@@ -1,18 +1,21 @@
 const expect = require('expect');
 const request = require('supertest');
 const {ObjectID} = require('mongodb');
- const {app} = require('./../server');
+const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
- const todos = [
+
+const todos = [
     { _id: new ObjectID(), text: 'First test todo'},
     { _id: new ObjectID(), text: 'Second test todo'}
 ];
- beforeEach((done) => {
+
+beforeEach((done) => {
     Todo.remove({}).then(() => {
         Todo.insertMany(todos);
     }).then(() => done());
 });
- describe('POST /todos', () => {
+
+describe('POST /todos', () => {
     it('should create a new todo', (done) => {
         let text = 'Test todo text';
          request(app)
@@ -93,7 +96,8 @@ const {Todo} = require('./../models/todo');
         .delete(`/todos/${hexId}`)
         .expect(200)
         .expect((res) => {
-          expect(res.body.todo._id).toBe(hexId);
+          console.log(res);
+          expect(res.body._id).toBe(hexId);
         })
         .end((err, res) => {
           if (err) {
