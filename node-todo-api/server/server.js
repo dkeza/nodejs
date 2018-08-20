@@ -42,20 +42,20 @@ app.get('/todos',
     });
 });
 
-app.get('/todos/:id', (req, res) => {
+app.get('/todos/:id', authenticate, (req, res) => {
     let id = req.params.id;
     if (!ObjectID.isValid(id)) {
-        console.log('not valid id!');
         res.status(404).send('');
         return;
     }
-    console.log('id', id);
-    Todo.findById(id).then((todo) => {
-        console.log('findById', todo);
+
+    Todo.findOne({
+        _id: id,
+        _creator: req.user._id
+    }).then((todo) => {
         if (todo) {
             res.status(200).send(todo);
         } else {
-            console.log('id not found!');
             res.status(404).send('');
         }
     }, (e) => {
@@ -63,19 +63,19 @@ app.get('/todos/:id', (req, res) => {
     });
 })
 
-app.delete('/todos/:id', (req, res) => {
+app.delete('/todos/:id', authenticate, (req, res) => {
     let id = req.params.id;
     if (!ObjectID.isValid(id)) {
-        console.log('not valid id!');
         res.status(404).send('');
         return;
     }
-    Todo.findByIdAndRemove(id).then((todo) => {
-        console.log('findById', todo);
+    Todo.findOneAndRemove({
+        _id : id,
+        _creator: req.user._id
+    }).then((todo) => {
         if (todo) {
             res.status(200).send(todo);
         } else {
-            console.log('id not found!');
             res.status(404).send('');
         }
     }, (e) => {
@@ -83,11 +83,10 @@ app.delete('/todos/:id', (req, res) => {
     });
 });
 
-app.patch('/todos/:id', (req, res) => {
+app.patch('/todos/:id', authenticate, (req, res) => {
     let id = req.params.id;
     let body = _.pick(req.body, ['text', 'completed']);
     if (!ObjectID.isValid(id)) {
-        console.log('not valid id!');
         res.status(404).send('');
         return;
     }
@@ -99,11 +98,13 @@ app.patch('/todos/:id', (req, res) => {
         body.completedAt = null;
     }
 
-    Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo) => {
+    Todo.findOneAndUpdate({
+        _id: id,
+        _creator: req.user._id
+    }, {$set: body}, {new: true}).then((todo) => {
         if (todo) {
             res.status(200).send({todo});
         } else {
-            console.log('id not found!');
             res.status(404).send('');
         }
     }).catch((e) => {
